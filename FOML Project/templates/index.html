@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CineMatch – AI Movie Recommender</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ── Hero Header ─────────────────────────────────────── -->
+  <header class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="logo">
+        <span class="logo-icon">🎬</span>
+        <span class="logo-text">CineMatch</span>
+      </div>
+      <p class="hero-sub">Powered by Random Forest AI · {{ genres|length }} Genres · 5,500+ Movies</p>
+    </div>
+  </header>
+
+  <!-- ── Main Layout ─────────────────────────────────────── -->
+  <main class="app-layout">
+
+    <!-- ── Filter Panel ── -->
+    <aside class="filter-panel">
+      <h2 class="panel-title">Find Your Movie</h2>
+
+      <div class="filter-group">
+        <label class="filter-label">Genre</label>
+        <div class="genre-grid">
+          {% for genre in genres %}
+          <button class="genre-chip" data-genre="{{ genre }}">{{ genre }}</button>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Language</label>
+        <div class="lang-grid">
+          {% for lang in languages %}
+          <button class="lang-chip" data-lang="{{ lang }}">{{ lang }}</button>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">
+          IMDb Rating
+          <span class="range-display" id="imdb-display">6.0 – 8.0</span>
+        </label>
+        <div class="dual-range-wrapper">
+          <div class="range-track">
+            <div class="range-fill" id="imdb-fill"></div>
+          </div>
+          <input type="range" class="range-input" id="imdb-min"
+                 min="1" max="9.3" step="0.1" value="6.0" />
+          <input type="range" class="range-input" id="imdb-max"
+                 min="1" max="9.3" step="0.1" value="8.0" />
+        </div>
+        <div class="range-labels">
+          <span>1.0</span><span>9.3</span>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">
+          Release Year
+          <span class="range-display" id="year-display">2010 – 2022</span>
+        </label>
+        <div class="dual-range-wrapper">
+          <div class="range-track">
+            <div class="range-fill" id="year-fill"></div>
+          </div>
+          <input type="range" class="range-input" id="year-min"
+                 min="{{ year_min }}" max="{{ year_max }}" step="1" value="2010" />
+          <input type="range" class="range-input" id="year-max"
+                 min="{{ year_min }}" max="{{ year_max }}" step="1" value="{{ year_max }}" />
+        </div>
+        <div class="range-labels">
+          <span>{{ year_min }}</span><span>{{ year_max }}</span>
+        </div>
+      </div>
+
+      <button class="btn-recommend" id="recommend-btn">
+        <span class="btn-icon">✦</span>
+        Get Recommendations
+      </button>
+
+      <div class="model-badge">
+        <span class="badge-dot"></span>
+        Random Forest Model Active
+      </div>
+    </aside>
+
+    <!-- ── Results Panel ── -->
+    <section class="results-panel">
+      <div class="results-header">
+        <h2 class="results-title" id="results-title">Pick your preferences →</h2>
+        <span class="results-count" id="results-count"></span>
+      </div>
+
+      <div id="results-container">
+        <div class="empty-state">
+          <div class="empty-icon">🎥</div>
+          <p>Select a genre and language, then adjust the sliders to find your perfect movie.</p>
+        </div>
+      </div>
+
+      <div class="loader hidden" id="loader">
+        <div class="spinner"></div>
+        <p>Analyzing with Random Forest…</p>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
